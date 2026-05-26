@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Pet Log
+title: Brindle
 ---
 
-# Pet Log
+# Brindle
 
 A simple, local-first pet health & care tracker for Android.
 
@@ -21,4 +21,4 @@ A simple, local-first pet health & care tracker for Android.
 
 ---
 
-© 2026 Zenirl. Pet Log is in active development.
+© 2026 Zenirl. Brindle is in active development.

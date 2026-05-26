@@ -52,7 +52,7 @@ async function loadShare(code) {
     snap = await getDoc(ref);
   } catch (e) {
     console.error(e);
-    showError("Couldn't reach Pet Log", "Check your connection and try again.");
+    showError("Couldn't reach Brindle", "Check your connection and try again.");
     return;
   }
   if (!snap.exists()) {

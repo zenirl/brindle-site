@@ -4,11 +4,11 @@ title: Privacy Policy
 permalink: /privacy/
 ---
 
-# Pet Log — Privacy Policy
+# Brindle — Privacy Policy
 
 **Last updated:** 2026-05-25
 
-Pet Log ("the app") is a local-first pet health tracker published by Zenirl. This policy explains what the app does and does not do with your data.
+Brindle ("the app") is a local-first pet health tracker published by Zenirl. This policy explains what the app does and does not do with your data.
 
 ## What we collect
 
@@ -20,7 +20,7 @@ All pet records, photos, and log entries you create are stored only on your devi
 
 ## Backups
 
-The app participates in **Android Auto Backup**. When you sign in to a Google account on your Android device, Google may back up app data (including Pet Log's database and photos) to your personal Google Drive, encrypted with a key tied to your device PIN/password. This is a Google service — Zenirl has no access to these backups.
+The app participates in **Android Auto Backup**. When you sign in to a Google account on your Android device, Google may back up app data (including Brindle's database and photos) to your personal Google Drive, encrypted with a key tied to your device PIN/password. This is a Google service — Zenirl has no access to these backups.
 
 You can disable Auto Backup at any time in *Android Settings → Google → Backup*.
 
@@ -30,7 +30,7 @@ The app lets you export your data to a JSON file via the system share sheet. Whe
 
 ## Pet sitter sharing (optional, opt-in)
 
-If you tap **Share with sitter** in the app, Pet Log uploads a one-time snapshot of the chosen pet's care information (feeding schedule, meds, vet contact, behavior notes, recent activity) to our Firebase project so the sitter can open it via a web link without installing anything.
+If you tap **Share with sitter** in the app, Brindle uploads a one-time snapshot of the chosen pet's care information (feeding schedule, meds, vet contact, behavior notes, recent activity) to our Firebase project so the sitter can open it via a web link without installing anything.
 
 - The snapshot is tied to a random 8-character share code that acts as the URL token.
 - It expires automatically after 7 days.
@@ -41,11 +41,11 @@ Pet sitter sharing is the only feature that uploads data off your device, and it
 
 ## Permissions
 
-Pet Log requests only what it needs, on demand: access to a single photo you pick via the system photo picker, and notification permission (Android 13+) so reminders can ring. The app does not browse your photo library and does not access location, contacts, microphone, or camera.
+Brindle requests only what it needs, on demand: access to a single photo you pick via the system photo picker, and notification permission (Android 13+) so reminders can ring. The app does not browse your photo library and does not access location, contacts, microphone, or camera.
 
 ## Children's data
 
-Pet Log is not directed at children under 13.
+Brindle is not directed at children under 13.
 
 ## Contact
 

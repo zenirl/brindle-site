@@ -1,12 +1,12 @@
 # petlog-site
 
-Public website for [Pet Log](https://github.com/zenirl/petlog) (private repo). Hosted on GitHub Pages at <https://zenirl.github.io/petlog-site/>.
+Public website for [Brindle](https://github.com/zenirl/petlog) (private repo). Hosted on GitHub Pages at <https://zenirl.github.io/petlog-site/>.
 
 ## What's here
 
 | Path | Purpose |
 | --- | --- |
-| `/` | Landing page (about Pet Log) |
+| `/` | Landing page (about Brindle) |
 | `/privacy/` | Privacy policy (linked from the app) |
 | `/sitter/?code=XXX` | Pet sitter web app — opens a shared snapshot by code, lets the sitter check off feedings, walks, and meds. Updates flow back to the owner's app via Firestore. |
 
