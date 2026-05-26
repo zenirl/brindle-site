@@ -1,6 +1,6 @@
-# petlog-site
+# brindle-site
 
-Public website for [Brindle](https://github.com/zenirl/petlog) (private repo). Hosted on GitHub Pages at <https://zenirl.github.io/petlog-site/>.
+Public website for [Brindle](https://github.com/zenirl/brindle) (private Android app repo). Hosted on GitHub Pages at <https://zenirl.github.io/brindle-site/>.
 
 ## What's here
 
@@ -22,4 +22,4 @@ Pushes to `main` auto-deploy via GitHub Pages.
 
 ## Companion repo
 
-[zenirl/petlog](https://github.com/zenirl/petlog) — the Android app (private).
+[zenirl/brindle](https://github.com/zenirl/brindle) — the Android app (private).

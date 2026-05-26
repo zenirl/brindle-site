@@ -1,7 +1,7 @@
 title: Brindle
 description: Simple pet care tracker for Android — feedings, vaccinations, walks, sitter handoff. Local-first.
 url: https://zenirl.github.io
-baseurl: /petlog-site
+baseurl: /brindle-site
 theme: minima
 exclude:
   - README.md

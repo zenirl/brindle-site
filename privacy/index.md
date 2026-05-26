@@ -49,8 +49,8 @@ Brindle is not directed at children under 13.
 
 ## Contact
 
-For questions about this policy, open an issue at <https://github.com/zenirl/petlog-site/issues> or email <zencandev@gmail.com>.
+For questions about this policy, open an issue at <https://github.com/zenirl/brindle-site/issues> or email <zencandev@gmail.com>.
 
 ## Changes
 
-If we change this policy, the "Last updated" date above will change and the new version will be published at <https://zenirl.github.io/petlog-site/privacy/>.
+If we change this policy, the "Last updated" date above will change and the new version will be published at <https://zenirl.github.io/brindle-site/privacy/>.

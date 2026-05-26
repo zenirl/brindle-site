@@ -15,8 +15,8 @@ A simple, local-first pet health & care tracker for Android.
 
 ## Links
 
-- [Privacy policy](/petlog-site/privacy/)
-- [Pet sitter portal](/petlog-site/sitter/) — needs a share code from the app
+- [Privacy policy](/brindle-site/privacy/)
+- [Pet sitter portal](/brindle-site/sitter/) — needs a share code from the app
 - [Get in touch](mailto:zencandev@gmail.com)
 
 ---
