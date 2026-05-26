@@ -1,0 +1,8 @@
+title: Pet Log
+description: Simple pet health & care tracker for Android. Local-first.
+url: https://zenirl.github.io
+baseurl: /petlog-site
+theme: minima
+exclude:
+  - README.md
+  - .gitignore

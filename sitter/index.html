@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Pet sitter — Pet Log</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main id="root">
+    <header id="header">
+      <div class="brand">🐾 Pet Log</div>
+      <div id="status" class="status">Loading…</div>
+    </header>
+
+    <section id="error" class="card error hidden">
+      <h2 id="error-title">Couldn't open this share</h2>
+      <p id="error-body">The code might be wrong, expired, or revoked. Ask the owner to send a fresh link from their app.</p>
+    </section>
+
+    <section id="pet-card" class="card hero hidden">
+      <div class="hero-emoji" id="pet-emoji">🐾</div>
+      <div>
+        <h1 id="pet-name">—</h1>
+        <p id="pet-sub" class="muted">—</p>
+      </div>
+    </section>
+
+    <section id="today" class="card hidden">
+      <h2>Today</h2>
+      <div id="feedings"></div>
+      <p class="hint">Tap to mark each feeding done. The owner sees it instantly.</p>
+    </section>
+
+    <section id="meds" class="card hidden">
+      <h2>Medications</h2>
+      <div id="meds-list"></div>
+    </section>
+
+    <section id="contacts" class="card hidden">
+      <h2>Contacts</h2>
+      <div id="contacts-list"></div>
+    </section>
+
+    <section id="behavior" class="card hidden">
+      <h2>Behavior &amp; quirks</h2>
+      <p id="behavior-text"></p>
+    </section>
+
+    <section id="check-ins" class="card hidden">
+      <h2>Your check-ins</h2>
+      <div id="checkin-list" class="checkins"></div>
+      <form id="custom-form" autocomplete="off">
+        <input type="text" id="custom-input" placeholder="e.g. went potty, ate treats, vomited once" maxlength="120" />
+        <button type="submit">Post</button>
+      </form>
+    </section>
+
+    <footer class="muted small">
+      Powered by Pet Log · <a href="../privacy/">Privacy</a>
+    </footer>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
