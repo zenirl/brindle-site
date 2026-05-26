@@ -156,7 +156,12 @@ function wireCheckinForm(code, data) {
       btn.disabled = true;
       btn.textContent = "✓ Done";
       btn.closest(".feed-row").classList.add("done");
-      await postCheckin(code, `Fed ${f.portion} (${f.time})`, "feeding");
+      // Include feedingId so the owner's app can auto-mark the matching
+      // FeedingLog as done. Falls back to text-only if the share predates
+      // schema-with-ids (older shares' feeding objects lack `id`).
+      await postCheckin(code, `Fed ${f.portion} (${f.time})`, "feeding", {
+        feedingId: f.id || null
+      });
     });
   });
 
@@ -169,13 +174,11 @@ function wireCheckinForm(code, data) {
   });
 }
 
-async function postCheckin(code, text, kind) {
+async function postCheckin(code, text, kind, extra = {}) {
   try {
-    await addDoc(collection(db, "shares", code, "checkins"), {
-      text,
-      kind,
-      at: serverTimestamp()
-    });
+    const doc = { text, kind, at: serverTimestamp() };
+    Object.entries(extra).forEach(([k, v]) => { if (v != null) doc[k] = v; });
+    await addDoc(collection(db, "shares", code, "checkins"), doc);
     setStatus("Saved · " + new Date().toLocaleTimeString());
   } catch (e) {
     console.error(e);
