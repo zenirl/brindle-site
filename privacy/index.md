@@ -49,7 +49,7 @@ Pet Log is not directed at children under 13.
 
 ## Contact
 
-For questions about this policy, open an issue at <https://github.com/zenirl/petlog-site/issues> or email <support@zenirl.com>.
+For questions about this policy, open an issue at <https://github.com/zenirl/petlog-site/issues> or email <zencandev@gmail.com>.
 
 ## Changes
 

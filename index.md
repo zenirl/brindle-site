@@ -17,7 +17,7 @@ A simple, local-first pet health & care tracker for Android.
 
 - [Privacy policy](/petlog-site/privacy/)
 - [Pet sitter portal](/petlog-site/sitter/) — needs a share code from the app
-- [Get in touch](mailto:support@zenirl.com)
+- [Get in touch](mailto:zencandev@gmail.com)
 
 ---
 
