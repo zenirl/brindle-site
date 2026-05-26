@@ -163,3 +163,155 @@ footer a { color: var(--primary); }
   font-weight: 600;
   cursor: pointer;
 }
+
+/* Sitter name prompt */
+.name-prompt h2 { color: var(--primary); }
+.name-prompt form { display: flex; gap: 8px; margin-top: 8px; }
+.name-prompt input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 16px;
+}
+.name-prompt button {
+  background: var(--primary);
+  color: var(--card);
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.sitter-badge {
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 0;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+/* Emergency / call buttons */
+.calls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.call-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+}
+.call-btn .call-label {
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.call-btn .call-value {
+  font-size: 15px;
+  margin-top: 2px;
+}
+.call-btn .call-value a { color: inherit; text-decoration: none; }
+.call-emergency { background: rgba(179, 38, 30, 0.08); border-color: rgba(179, 38, 30, 0.3); }
+.call-emergency .call-label { color: var(--error); }
+.call-vet { background: var(--primary-light); border-color: transparent; }
+.call-vet .call-label { color: var(--primary); }
+.call-noop { opacity: 0.85; cursor: default; }
+
+/* Walk */
+.walk-btn {
+  width: 100%;
+  background: var(--primary);
+  color: var(--card);
+  border: 0;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.walk-btn.walking {
+  background: var(--error);
+}
+.walk-status {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  min-height: 18px;
+}
+
+/* Meds — new layout with action button */
+#meds-list .med-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+#meds-list .med-row:last-child { border-bottom: none; }
+#meds-list .med-row.done .med-title,
+#meds-list .med-row.done .med-sub {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+.med-body { flex: 1; }
+.med-btn {
+  background: var(--primary);
+  color: var(--card);
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.med-btn[disabled] {
+  background: var(--primary-light);
+  color: var(--muted);
+  cursor: default;
+}
+
+/* Quick check-in chips */
+.quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.quick-chip {
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.quick-chip:active { transform: scale(0.96); }
+.quick-chip.flashed {
+  background: var(--primary);
+  color: var(--card);
+}
+
+/* Attribution on check-in rows */
+.checkin-who {
+  font-weight: 700;
+  color: var(--primary);
+  margin-right: 4px;
+}

@@ -26,8 +26,19 @@
       </div>
     </section>
 
+    <section id="contacts" class="card hidden">
+      <h2>Call</h2>
+      <div id="contacts-list" class="calls"></div>
+    </section>
+
+    <section id="walk" class="card hidden">
+      <h2>Walk</h2>
+      <button type="button" id="walk-btn" class="walk-btn">▶ Start walk</button>
+      <div id="walk-status" class="walk-status"></div>
+    </section>
+
     <section id="today" class="card hidden">
-      <h2>Today</h2>
+      <h2>Feedings today</h2>
       <div id="feedings"></div>
       <p class="hint">Tap to mark each feeding done. The owner sees it instantly.</p>
     </section>
@@ -37,11 +48,6 @@
       <div id="meds-list"></div>
     </section>
 
-    <section id="contacts" class="card hidden">
-      <h2>Contacts</h2>
-      <div id="contacts-list"></div>
-    </section>
-
     <section id="behavior" class="card hidden">
       <h2>Behavior &amp; quirks</h2>
       <p id="behavior-text"></p>
@@ -49,9 +55,17 @@
 
     <section id="check-ins" class="card hidden">
       <h2>Your check-ins</h2>
+      <div class="quick-chips">
+        <button type="button" class="quick-chip" data-text="All good 🐾" data-kind="note">All good 🐾</button>
+        <button type="button" class="quick-chip" data-text="Pooped 💩" data-kind="note">Pooped 💩</button>
+        <button type="button" class="quick-chip" data-text="Drank water" data-kind="note">Drank water 💧</button>
+        <button type="button" class="quick-chip" data-text="Played a lot" data-kind="note">Played 🎾</button>
+        <button type="button" class="quick-chip" data-text="Vomited" data-kind="note">Vomited 🤢</button>
+        <button type="button" class="quick-chip" data-text="Seemed off — please check in" data-kind="note">Off ⚠️</button>
+      </div>
       <div id="checkin-list" class="checkins"></div>
       <form id="custom-form" autocomplete="off">
-        <input type="text" id="custom-input" placeholder="e.g. went potty, ate treats, vomited once" maxlength="120" />
+        <input type="text" id="custom-input" placeholder="Anything else? e.g. ate a treat from neighbour" maxlength="160" />
         <button type="submit">Post</button>
       </form>
     </section>
