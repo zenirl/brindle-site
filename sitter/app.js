@@ -4,7 +4,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, onSnapshot, collection,
-  addDoc, query, orderBy, serverTimestamp
+  addDoc, updateDoc, query, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -88,6 +88,38 @@ async function loadShare(code) {
   wireWalkButtons(code, data);
   wireQuickChips(code);
   subscribeShareLifecycle(code);
+  startPresenceHeartbeat(code);
+}
+
+/**
+ * Presence heartbeat: write shares/{code}.lastSeen = serverTimestamp() once
+ * on load and every 60s while the tab is visible. The owner app reads this
+ * to show "here now" vs "last seen Xm ago" in the Today banner.
+ *
+ * Firestore rule (deployed): any signed-in user may update the share doc
+ * IF the only field affected is `lastSeen`. So this is safe — sitters can't
+ * touch pet data, expiry, ownership, etc.
+ */
+let heartbeatHandle = null;
+function startPresenceHeartbeat(code) {
+  const ref = doc(db, "shares", code);
+  const ping = () => {
+    if (lifecycleStopped) return;
+    if (document.hidden) return;
+    updateDoc(ref, { lastSeen: serverTimestamp() }).catch((err) => {
+      // Silent — a permission error here means the share was revoked
+      // while we were sitting on the page; subscribeShareLifecycle will
+      // handle the visible side of that.
+      console.warn("presence ping failed", err?.code || err);
+    });
+  };
+  ping(); // immediate first ping
+  heartbeatHandle = setInterval(ping, 60_000);
+  // Stop when the share ends — enterRevokedState() reads this handle.
+  // Resume immediate ping when tab regains visibility.
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) ping();
+  });
 }
 
 /**
@@ -120,6 +152,7 @@ function subscribeShareLifecycle(code) {
 function enterRevokedState(title, body) {
   if (lifecycleStopped) return;
   lifecycleStopped = true;
+  if (heartbeatHandle) { clearInterval(heartbeatHandle); heartbeatHandle = null; }
   // Hide all the interactive sections so the sitter can't post any more.
   ["today", "meds", "walk", "check-ins"].forEach((id) => {
     const el = $(id);
