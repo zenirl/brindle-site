@@ -78,8 +78,10 @@ async function loadShare(code) {
     showError("This share expired", "Ask the owner to send a new link from the app.");
     return;
   }
-  // Prompt for a name on first visit so check-ins are attributed.
-  ensureSitterName(data);
+  // Name is mandatory — gate the rest of the page until the sitter submits
+  // one. Without this people scroll past the prompt and post check-ins
+  // anonymously, which defeats the whole point of attribution.
+  await requireSitterName(data);
   renderShare(data);
   subscribeCheckins(code);
   wireCheckinForm(code, data);
@@ -87,30 +89,36 @@ async function loadShare(code) {
   wireQuickChips(code);
 }
 
-function ensureSitterName(data) {
-  if (sitterName()) {
-    renderNameBadge();
-    return;
-  }
-  // Inline prompt — keeps the page modal-free.
-  const card = document.createElement("section");
-  card.className = "card name-prompt";
-  card.innerHTML = `
-    <h2>Who's sitting?</h2>
-    <p class="small muted">${escapeHtml(data.petName || "the pet")}'s owner will see your name on every check-in.</p>
-    <form id="name-form" autocomplete="off">
-      <input type="text" id="name-input" placeholder="Your first name" maxlength="40" required />
-      <button type="submit">Continue</button>
-    </form>
-  `;
-  $("root").insertBefore(card, $("pet-card"));
-  $("name-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const v = $("name-input").value.trim();
-    if (!v) return;
-    setSitterName(v);
-    card.remove();
-    renderNameBadge();
+function requireSitterName(data) {
+  return new Promise((resolve) => {
+    if (sitterName()) {
+      renderNameBadge();
+      resolve();
+      return;
+    }
+    // Inline blocking prompt. While it's shown, the other sections stay
+    // .hidden so the sitter can't interact with anything until they
+    // identify themselves.
+    const card = document.createElement("section");
+    card.className = "card name-prompt";
+    card.innerHTML = `
+      <h2>Who's sitting?</h2>
+      <p class="small muted">${escapeHtml(data.petName || "the pet")}'s owner will see your name on every check-in. Required so they know who did what.</p>
+      <form id="name-form" autocomplete="off">
+        <input type="text" id="name-input" placeholder="Your first name" maxlength="40" required autofocus />
+        <button type="submit">Continue</button>
+      </form>
+    `;
+    $("root").insertBefore(card, $("pet-card"));
+    $("name-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const v = $("name-input").value.trim();
+      if (!v) return;
+      setSitterName(v);
+      card.remove();
+      renderNameBadge();
+      resolve();
+    });
   });
 }
 
