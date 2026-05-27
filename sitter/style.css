@@ -315,3 +315,17 @@ footer a { color: var(--primary); }
   color: var(--primary);
   margin-right: 4px;
 }
+
+/* Banner shown when the owner revokes the share or it expires while open. */
+.revoked-banner {
+  background: var(--primary-light);
+  border: 1px solid var(--border);
+}
+.revoked-banner h2 {
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+.revoked-banner p {
+  color: var(--fg);
+  margin: 0;
+}

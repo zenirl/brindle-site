@@ -87,6 +87,56 @@ async function loadShare(code) {
   wireCheckinForm(code, data);
   wireWalkButtons(code, data);
   wireQuickChips(code);
+  subscribeShareLifecycle(code);
+}
+
+/**
+ * Live-watch the parent share doc. The owner can revoke at any time (deletes
+ * the doc) or the share can expire while we're sitting on the page. In both
+ * cases we need to clearly tell the sitter that further actions won't be
+ * received, and stop them from posting more orphan check-ins.
+ */
+let lifecycleStopped = false;
+function subscribeShareLifecycle(code) {
+  const ref = doc(db, "shares", code);
+  onSnapshot(ref, (snap) => {
+    if (lifecycleStopped) return;
+    if (!snap.exists()) {
+      enterRevokedState("Owner ended this share", "Thanks for looking after them! You can close this page — anything you logged is already saved.");
+      return;
+    }
+    const data = snap.data();
+    const expires = data.expiresAt?.toMillis ? data.expiresAt.toMillis() : null;
+    if (expires && Date.now() > expires) {
+      enterRevokedState("This share expired", "Ask the owner to send a fresh link if you still need access.");
+    }
+  }, (err) => {
+    // Permission errors after a revoke can land here. Treat as revoked.
+    console.warn("share lifecycle error", err);
+    enterRevokedState("Owner ended this share", "Thanks for looking after them! You can close this page.");
+  });
+}
+
+function enterRevokedState(title, body) {
+  if (lifecycleStopped) return;
+  lifecycleStopped = true;
+  // Hide all the interactive sections so the sitter can't post any more.
+  ["today", "meds", "walk", "check-ins"].forEach((id) => {
+    const el = $(id);
+    if (el) el.classList.add("hidden");
+  });
+  // Leave emergency contacts visible — vet info might still be useful if
+  // the sitter is physically with the pet.
+  setStatus("Share ended");
+  const banner = document.createElement("section");
+  banner.className = "card revoked-banner";
+  banner.innerHTML = `
+    <h2>${escapeHtml(title)}</h2>
+    <p>${escapeHtml(body)}</p>
+  `;
+  const root = $("root");
+  // Insert near the top, right after the header / before pet card.
+  root.insertBefore(banner, $("pet-card"));
 }
 
 function requireSitterName(data) {
