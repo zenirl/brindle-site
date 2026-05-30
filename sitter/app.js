@@ -456,8 +456,16 @@ function setPhotoStatus(msg) {
 }
 
 function wirePhotoButton(code) {
-  const btn = $("photo-btn");
-  const input = $("photo-input");
+  // Two inputs so the sitter gets both options: the camera one carries the
+  // `capture` hint (opens the camera), the gallery one omits it (opens the
+  // OS photo picker / file chooser). Both feed the same upload handler.
+  wireOnePhotoInput(code, "photo-camera-btn", "photo-input-camera");
+  wireOnePhotoInput(code, "photo-gallery-btn", "photo-input-gallery");
+}
+
+function wireOnePhotoInput(code, btnId, inputId) {
+  const btn = $(btnId);
+  const input = $(inputId);
   if (!btn || !input) return;
   btn.addEventListener("click", () => { if (!lifecycleStopped) input.click(); });
   input.addEventListener("change", async () => {

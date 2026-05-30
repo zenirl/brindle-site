@@ -317,8 +317,13 @@ footer a { color: var(--primary); }
 }
 
 /* Send-a-photo */
+.photo-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
 .photo-btn {
-  width: 100%;
+  flex: 1;
   background: var(--bg);
   color: var(--primary);
   border: 1px solid var(--primary);
@@ -327,7 +332,6 @@ footer a { color: var(--primary); }
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  margin-bottom: 8px;
 }
 .photo-btn[disabled] { opacity: 0.6; cursor: default; }
 .photo-status {
