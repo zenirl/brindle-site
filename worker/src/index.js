@@ -29,6 +29,11 @@ export default {
     if (request.method === "GET" && url.pathname.startsWith("/p/")) {
       const key = decodeURIComponent(url.pathname.slice(3));
       if (!isValidKey(key)) return new Response("Bad key", { status: 400 });
+      // Tie photo visibility to the share's lifecycle: once the owner revokes
+      // (or the share expires), the photo 404s immediately — no lingering
+      // access via a copied URL. The owner's phone already has its own copy.
+      const code = key.slice(0, 8);
+      if (!(await shareIsLive(env, code))) return new Response("Not found", { status: 404 });
       const obj = await env.PHOTOS.get(key);
       if (!obj) return new Response("Not found", { status: 404 });
       const headers = new Headers();
