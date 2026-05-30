@@ -1,0 +1,15 @@
+# Cloudflare Worker that stores sitter photos in R2 (replaces base64-in-Firestore).
+# Deploy:  cd brindle-site/worker && npx wrangler deploy
+# Bucket:  npx wrangler r2 bucket create brindle-photos   (once)
+name = "brindle-photos"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+# R2 bucket binding — the Worker reads/writes objects via env.PHOTOS.
+[[r2_buckets]]
+binding = "PHOTOS"
+bucket_name = "brindle-photos"
+
+# Which Firebase project's /shares the Worker validates uploads against.
+[vars]
+FIREBASE_PROJECT = "petlog-zenirl"

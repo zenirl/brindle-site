@@ -6,3 +6,4 @@ theme: minima
 exclude:
   - README.md
   - .gitignore
+  - worker

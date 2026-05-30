@@ -443,12 +443,12 @@ function wireWalkButtons(code, data) {
   });
 }
 
-// ── Photo updates ───────────────────────────────────────────────────────────
-// Sitters can send a quick photo. We downscale + JPEG-compress it in the
-// browser to a small base64 string stored inline on the check-in doc — no
-// Firebase Storage, no extra cost, and it stays well under Firestore's ~1 MB
-// doc ceiling (the security rule rejects a `photo` field >= 900 000 chars).
-const PHOTO_CAP = 880_000;
+// ── Photo updates (Cloudflare R2 via Worker) ────────────────────────────────
+// The sitter's photo is downscaled + JPEG-compressed in the browser, uploaded
+// to the Brindle photo Worker (which stores it in R2), and the returned URL is
+// attached to a kind:"photo" check-in — no base64, no Firestore bloat, free
+// egress. Set PHOTO_WORKER to your deployed Worker URL (see worker/README.md).
+const PHOTO_WORKER = "https://brindle-photos.bitbillco.workers.dev";
 
 function setPhotoStatus(msg) {
   const el = $("photo-status");
@@ -475,13 +475,18 @@ function wireOnePhotoInput(code, btnId, inputId) {
     btn.disabled = true;
     setPhotoStatus("Preparing photo…");
     try {
-      // Try a reasonable size first, then fall back smaller if over the cap.
-      let b64 = await downscaleToBase64(file, 1024, 0.7);
-      if (b64 && b64.length >= PHOTO_CAP) b64 = await downscaleToBase64(file, 800, 0.55);
-      if (b64 && b64.length >= PHOTO_CAP) b64 = await downscaleToBase64(file, 640, 0.5);
-      if (!b64) { setPhotoStatus("Couldn't read that image."); return; }
-      if (b64.length >= PHOTO_CAP) { setPhotoStatus("Photo too large — try another."); return; }
-      await postCheckin(code, "📷 Sent a photo", "photo", { photo: b64 });
+      const blob = await downscaleToBlob(file, 1280, 0.72);
+      if (!blob) { setPhotoStatus("Couldn't read that image."); return; }
+      setPhotoStatus("Uploading photo…");
+      const resp = await fetch(`${PHOTO_WORKER}/upload?code=${encodeURIComponent(code)}`, {
+        method: "POST",
+        headers: { "Content-Type": "image/jpeg" },
+        body: blob,
+      });
+      if (!resp.ok) { setPhotoStatus("Upload failed — try again."); return; }
+      const { url } = await resp.json();
+      if (!url) { setPhotoStatus("Upload failed — try again."); return; }
+      await postCheckin(code, "📷 Sent a photo", "photo", { photoUrl: url });
       setPhotoStatus("Photo sent ✓");
     } catch (e) {
       console.error(e);
@@ -492,9 +497,8 @@ function wireOnePhotoInput(code, btnId, inputId) {
   });
 }
 
-/** Draw the image to a canvas at <= maxDim on its long edge and return raw
- *  base64 JPEG (no data: prefix — the owner app decodes it directly). */
-function downscaleToBase64(file, maxDim, quality) {
+/** Downscale to <= maxDim on the long edge and return a JPEG Blob (no base64). */
+function downscaleToBlob(file, maxDim, quality) {
   return new Promise((resolve) => {
     const url = URL.createObjectURL(file);
     const img = new Image();
@@ -508,9 +512,7 @@ function downscaleToBase64(file, maxDim, quality) {
       canvas.width = width;
       canvas.height = height;
       canvas.getContext("2d").drawImage(img, 0, 0, width, height);
-      const dataUrl = canvas.toDataURL("image/jpeg", quality);
-      const comma = dataUrl.indexOf(",");
-      resolve(comma >= 0 ? dataUrl.slice(comma + 1) : null);
+      canvas.toBlob((b) => resolve(b), "image/jpeg", quality);
     };
     img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
     img.src = url;
@@ -542,10 +544,12 @@ function subscribeCheckins(code) {
       row.className = "checkin";
       const when = v.at?.toDate ? v.at.toDate().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "";
       const who = v.sitterName ? `<span class="checkin-who">${escapeHtml(v.sitterName)}</span> ` : "";
-      if (v.kind === "photo" && v.photo) {
-        // base64 is [A-Za-z0-9+/=] only, safe to drop into the src attribute.
+      const photoSrc = v.photoUrl
+        ? escapeAttr(v.photoUrl)
+        : (v.photo ? `data:image/jpeg;base64,${v.photo}` : null); // legacy base64 fallback
+      if (v.kind === "photo" && photoSrc) {
         row.innerHTML = `${who}<span class="checkin-time">${when}</span>` +
-          `<img class="checkin-photo" src="data:image/jpeg;base64,${v.photo}" alt="Photo from sitter" loading="lazy" />`;
+          `<img class="checkin-photo" src="${photoSrc}" alt="Photo from sitter" loading="lazy" />`;
       } else {
         row.innerHTML = `${who}${escapeHtml(v.text || "")} <span class="checkin-time">${when}</span>`;
       }
