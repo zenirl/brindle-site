@@ -316,6 +316,34 @@ footer a { color: var(--primary); }
   margin-right: 4px;
 }
 
+/* Send-a-photo */
+.photo-btn {
+  width: 100%;
+  background: var(--bg);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+.photo-btn[disabled] { opacity: 0.6; cursor: default; }
+.photo-status {
+  font-size: 12px;
+  color: var(--muted);
+  min-height: 16px;
+  margin-bottom: 8px;
+}
+.checkin-photo {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 6px;
+  border-radius: 10px;
+}
+
 /* Banner shown when the owner revokes the share or it expires while open. */
 .revoked-banner {
   background: var(--primary-light);

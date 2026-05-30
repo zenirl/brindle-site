@@ -87,6 +87,7 @@ async function loadShare(code) {
   wireCheckinForm(code, data);
   wireWalkButtons(code, data);
   wireQuickChips(code);
+  wirePhotoButton(code);
   subscribeShareLifecycle(code);
   startPresenceHeartbeat(code);
 }
@@ -442,6 +443,72 @@ function wireWalkButtons(code, data) {
   });
 }
 
+// ── Photo updates ───────────────────────────────────────────────────────────
+// Sitters can send a quick photo. We downscale + JPEG-compress it in the
+// browser to a small base64 string stored inline on the check-in doc — no
+// Firebase Storage, no extra cost, and it stays well under Firestore's ~1 MB
+// doc ceiling (the security rule rejects a `photo` field >= 900 000 chars).
+const PHOTO_CAP = 880_000;
+
+function setPhotoStatus(msg) {
+  const el = $("photo-status");
+  if (el) el.textContent = msg;
+}
+
+function wirePhotoButton(code) {
+  const btn = $("photo-btn");
+  const input = $("photo-input");
+  if (!btn || !input) return;
+  btn.addEventListener("click", () => { if (!lifecycleStopped) input.click(); });
+  input.addEventListener("change", async () => {
+    const file = input.files && input.files[0];
+    input.value = ""; // let the sitter re-pick the same file later
+    if (!file) return;
+    btn.disabled = true;
+    setPhotoStatus("Preparing photo…");
+    try {
+      // Try a reasonable size first, then fall back smaller if over the cap.
+      let b64 = await downscaleToBase64(file, 1024, 0.7);
+      if (b64 && b64.length >= PHOTO_CAP) b64 = await downscaleToBase64(file, 800, 0.55);
+      if (b64 && b64.length >= PHOTO_CAP) b64 = await downscaleToBase64(file, 640, 0.5);
+      if (!b64) { setPhotoStatus("Couldn't read that image."); return; }
+      if (b64.length >= PHOTO_CAP) { setPhotoStatus("Photo too large — try another."); return; }
+      await postCheckin(code, "📷 Sent a photo", "photo", { photo: b64 });
+      setPhotoStatus("Photo sent ✓");
+    } catch (e) {
+      console.error(e);
+      setPhotoStatus("Couldn't send photo.");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
+
+/** Draw the image to a canvas at <= maxDim on its long edge and return raw
+ *  base64 JPEG (no data: prefix — the owner app decodes it directly). */
+function downscaleToBase64(file, maxDim, quality) {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let { width, height } = img;
+      const scale = Math.min(1, maxDim / Math.max(width, height));
+      width = Math.max(1, Math.round(width * scale));
+      height = Math.max(1, Math.round(height * scale));
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+      const dataUrl = canvas.toDataURL("image/jpeg", quality);
+      const comma = dataUrl.indexOf(",");
+      resolve(comma >= 0 ? dataUrl.slice(comma + 1) : null);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+    img.src = url;
+  });
+}
+
 async function postCheckin(code, text, kind, extra = {}) {
   try {
     const name = sitterName();
@@ -467,7 +534,13 @@ function subscribeCheckins(code) {
       row.className = "checkin";
       const when = v.at?.toDate ? v.at.toDate().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "";
       const who = v.sitterName ? `<span class="checkin-who">${escapeHtml(v.sitterName)}</span> ` : "";
-      row.innerHTML = `${who}${escapeHtml(v.text || "")} <span class="checkin-time">${when}</span>`;
+      if (v.kind === "photo" && v.photo) {
+        // base64 is [A-Za-z0-9+/=] only, safe to drop into the src attribute.
+        row.innerHTML = `${who}<span class="checkin-time">${when}</span>` +
+          `<img class="checkin-photo" src="data:image/jpeg;base64,${v.photo}" alt="Photo from sitter" loading="lazy" />`;
+      } else {
+        row.innerHTML = `${who}${escapeHtml(v.text || "")} <span class="checkin-time">${when}</span>`;
+      }
       list.appendChild(row);
     });
     if (snap.empty) {

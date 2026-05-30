@@ -6,7 +6,7 @@ permalink: /privacy/
 
 # Brindle — Privacy Policy
 
-**Last updated:** 2026-05-25
+**Last updated:** 2026-05-29
 
 Brindle ("the app") is a local-first pet health tracker published by Zenirl. This policy explains what the app does and does not do with your data.
 
@@ -36,6 +36,7 @@ If you tap **Share with sitter** in the app, Brindle uploads a one-time snapshot
 - It expires automatically after 7 days.
 - You can revoke a share at any time from the app, which deletes it from our servers.
 - The sitter's check-ins (e.g. "fed at 8 PM") are written to the same share document and visible only to you and anyone who has the code.
+- **Photos from your sitter:** the sitter can optionally send a photo from the web link. It is compressed in their browser and stored inside the same share document. It is deleted when the share expires (7 days) or when you revoke it, and Brindle copies it into your pet's photo gallery on your device. Photos are never used for any other purpose.
 
 Pet sitter sharing is the only feature that uploads data off your device, and it is fully optional.
 

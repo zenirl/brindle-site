@@ -10,7 +10,7 @@
   <!-- ?v= forces a fresh fetch of the module after each deploy. Bump on each
        change to app.js / style.css so sitters don't see a stale ES-module
        cached for hours. -->
-  <link rel="stylesheet" href="./style.css?v=6" />
+  <link rel="stylesheet" href="./style.css?v=7" />
 <body>
   <main id="root">
     <header id="header">
@@ -68,6 +68,9 @@
         <button type="button" class="quick-chip" data-text="Vomited" data-kind="note">Vomited 🤢</button>
         <button type="button" class="quick-chip" data-text="Seemed off — please check in" data-kind="note">Off ⚠️</button>
       </div>
+      <button type="button" id="photo-btn" class="photo-btn">📷 Send a photo</button>
+      <input type="file" id="photo-input" accept="image/*" capture="environment" class="hidden" />
+      <div id="photo-status" class="photo-status"></div>
       <div id="checkin-list" class="checkins"></div>
       <form id="custom-form" autocomplete="off">
         <input type="text" id="custom-input" placeholder="Anything else? e.g. ate a treat from neighbour" maxlength="160" />
@@ -80,6 +83,6 @@
     </footer>
   </main>
 
-  <script type="module" src="./app.js?v=6"></script>
+  <script type="module" src="./app.js?v=7"></script>
 </body>
 </html>
