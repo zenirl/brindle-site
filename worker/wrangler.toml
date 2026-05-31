@@ -4,6 +4,8 @@
 name = "brindle-photos"
 main = "src/index.js"
 compatibility_date = "2024-11-01"
+# Pinned so any future deploy doesn't need an interactive account picker.
+account_id = "13104d8847aa5ab22e1d26e29f6269c0"
 
 # R2 bucket binding — the Worker reads/writes objects via env.PHOTOS.
 [[r2_buckets]]
